@@ -4,6 +4,9 @@
 Clone project : ```https://github.com/prafuel/good-prompt-frontend.git```
 
 💻 Install all dependencies, <br>
+
+- Need backend to run and process all queries -> ```https://github.com/prafuel/good-prompt-backend.git```
+
 🐧 for linux : ``` pip3 install -r requirements.txt``` <br>
 🪟 for windows : ``` pip install -r requirements.txt ```
 
