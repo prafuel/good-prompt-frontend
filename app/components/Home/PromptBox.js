@@ -134,13 +134,15 @@ const PromptBox = (props) => {
     });
 
     // fetching data from flask api
-    const fetchData = async (API_URL, data) => {
+    const fetchData = async (API_URL, data, file=false) => {
         const current = Object.getOwnPropertyNames(data)[0];
 
-        if (current === "user1" || current === "user2") {
+        if (file == false) {
             setPrompt("Loading...")
             try {
-                const response = await axios.post(API_URL, data);
+                const response = await axios.post(API_URL, data, {
+                    "Content-Type" : "application/json"
+                });
                 return response.data['output'];
             } catch (error) {
                 // alert(error);
@@ -189,7 +191,7 @@ const PromptBox = (props) => {
         }
         // setOutput(prompt)
 
-        let res = await fetchData("http://localhost:8000/prompt", { "user2": JSON.stringify(filter) });
+        let res = await fetchData("http://127.0.0.1:8000/generate_prompt", { "data": JSON.stringify(filter) });
         if (res === undefined) { res = "Server Side Error" }
         // const o = prompt;
 
@@ -208,7 +210,7 @@ const PromptBox = (props) => {
             return;
         }
 
-        let res2 = await fetchData("http://localhost:8000", { "user1": JSON.stringify(filter) });
+        let res2 = await fetchData("http://127.0.0.1:8000/refine", { "data": JSON.stringify(filter) });
         const p = prompt;
         (res2 === undefined) ? setPrompt(p) : setPrompt(res2);
     }
@@ -271,7 +273,7 @@ const PromptBox = (props) => {
 
             setPrompt('Loading...');
             // console.log(form_data)
-            const res = await fetchData("http://localhost:8000/file", form_data);
+            const res = await fetchData("http://127.0.0.1:8000/file", form_data);
             // setPrompt(res);
 
             const newItem = {
@@ -299,7 +301,7 @@ const PromptBox = (props) => {
 
         if (!merge['prompt1'].trim().length || !merge['prompt2'].trim().length) { return };
         // res = merge['prompt1'] + merge['prompt2'];
-        const res = await fetchData("http://localhost:8000/transfer", {"user1" : JSON.stringify({"from_prompt" : merge['prompt1'], "too_prompt" : merge['prompt2']})});
+        const res = await fetchData("http://127.0.0.1:8000/transform", {"data" : JSON.stringify({"from_this" : merge['prompt1'], "to_this" : merge['prompt2']})});
 
         console.log(res);
         setResult(res);
